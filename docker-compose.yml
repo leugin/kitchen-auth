@@ -1,0 +1,36 @@
+services:
+    kitchen_auth:
+        hostname: kitchen_auth
+        build:
+            context: ./
+        networks:
+            - kitchen_net
+        depends_on:
+            - mysql
+        ports:
+            - "10082:80"
+        volumes:
+            - ./:/var/www/html
+            - ../kitchen-core:/var/www/kitchen-core
+        command: php artisan serve --host=0.0.0.0 --port=80
+    mysql:
+        hostname: mysql
+        build:
+            context: docker/mysql
+        platform: linux/x86_64
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_PASSWORD: "${DB_USERNAME}"
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+        volumes:
+            - kitchen_auth_mysql_volume:/var/lib/mysql
+        networks:
+            - kitchen_net
+networks:
+    kitchen_net:
+        driver: bridge
+volumes:
+    kitchen_auth_mysql_volume:
+        driver: local
