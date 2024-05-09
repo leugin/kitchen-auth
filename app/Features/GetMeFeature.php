@@ -5,6 +5,7 @@ namespace App\Features;
 
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Leugin\KitchenCore\Helper\Response;
 
 class GetMeFeature
 {
@@ -15,11 +16,9 @@ class GetMeFeature
     {
         /**@var User $user*/
         $user = auth()->user();
-        return response()->json(
-            [
+        return response()->json( Response::success([
             'id' => $user->id,
-            ]
-        );
+        ]));
     }
 
 
